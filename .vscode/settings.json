@@ -3,10 +3,11 @@
       "**/node_modules": true,
       "**/yarn.lock": true,
 
-      "**/.gitignore": true,
-      "**/.editorconfig": true,
-      "**/rollup.config.js": true,
-      "**/tsconfig.json": true,
+      ".gitignore": true,
+      ".editorconfig": true,
+      "rollup.config.js": true,
+      ".husky": true,
+      "tsconfig.json": true,
   },
   "git.ignoreLimitWarning": true
 }
