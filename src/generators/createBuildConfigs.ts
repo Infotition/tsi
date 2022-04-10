@@ -15,7 +15,7 @@ import { BuildOpts } from '../types/index.types';
  * @param opts  The build options to generate a config from.
  * @returns     The rollup configuration.
  */
-export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
+const createRollupConfig = (opts: BuildOpts) => {
   const { format, entry, env, maps } = opts;
 
   const isProd = env === 'prod';
@@ -84,4 +84,26 @@ export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
       plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
     },
   ];
+};
+
+/**
+ * From user build option input an array rollup configuration gets generated and
+ * returned. Each element must be bundled and written with rollup.
+ *
+ * If multiple entries are provided, multiple rollup configs are getting generated.
+ *
+ * @param opts  The build options to generate a config from.
+ * @returns     The rollup configuration.
+ */
+export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
+  const { entry } = opts;
+
+  // If only a single entry is provided, create its config
+  if (entry.indexOf(',') === -1) {
+    return createRollupConfig(opts);
+  }
+
+  // If multiple entries are provided, create rollup config for every entry
+  const entries = entry.split(',');
+  return entries.map((e) => createRollupConfig({ ...opts, entry: e })).flat();
 };
