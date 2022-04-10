@@ -4,10 +4,10 @@
       "**/yarn.lock": true,
 
       ".gitignore": true,
-      ".editorconfig": true,
+      ".editorconfig": false,
       "rollup.config.js": true,
       ".husky": true,
-      "tsconfig.json": true,
+      "tsconfig.json": false,
   },
   "git.ignoreLimitWarning": true
 }

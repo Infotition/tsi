@@ -2,4 +2,10 @@
   "extends": "./templates/tsconfig.json",
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "lib"],
+  "compilerOptions": {
+    "declaration": true,
+    "baseUrl": "./src",
+    "declarationDir": "types",
+    "outDir": "./lib"
+  }
 }

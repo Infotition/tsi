@@ -8,14 +8,7 @@
     "skipLibCheck": true,
 
     "lib": ["es2021", "dom"],
-    "declaration": true,
-    "sourceMap": false,
-    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "declarationDir": "types",
-
-    "baseUrl": "src",
-    "outDir": "lib",
   },
 }

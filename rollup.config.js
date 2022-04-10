@@ -12,7 +12,7 @@ const rollupConfig = [
         sourcemap: false,
       },
     ],
-    plugins: [typescript({ tsconfig: 'tsconfig.json' }), terser(), shebang()],
+    plugins: [typescript({ tsconfig: './tsconfig.json' }), terser(), shebang()],
   },
 ];
 
