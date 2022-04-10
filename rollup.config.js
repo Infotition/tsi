@@ -9,7 +9,7 @@ const rollupConfig = [
     output: [
       {
         file: 'lib/index.js',
-        format: 'cjs',
+        format: 'esm',
         sourcemap: false,
       },
     ],
