@@ -2,43 +2,41 @@
 
 import { OutputOptions, rollup } from 'rollup';
 import sade from 'sade';
+
 import { createBuildConfigs } from './generators/createBuildConfigs';
-import { BuildOpts } from './types';
+import type { BuildOpts } from './types/index.types';
 
 const prog = sade('tsi');
 
+//* ----------------------------------------------------------------------------------
+//* BUILD COMMAND
+//* ----------------------------------------------------------------------------------
 prog
   .command('build')
-  .describe('Build your project once and exit')
+  .describe('Build your project once and exit.')
 
-  .option('--entry', 'Entry Module(s)', 'src/index.ts')
+  .option('--entry', 'Specify the Entry Module(s).', 'src/index.ts')
   .example('build --entry src/index.ts')
 
-  .option('--target', 'Specify your target environment', 'browser')
-  .example('build --target node')
-
-  .option('--env', 'Specify your build environment', 'prod')
+  .option('--env', 'Specify your build environment.', 'prod')
   .example('build --env prod')
 
-  .option('--maps', 'Generate source maps', false)
+  .option('--maps', 'Generate source maps.', false)
   .example('build --maps')
 
-  .option('--format', 'Specify module format(s)', 'esm')
-  .example('build --format both')
-
-  .option('--tsconfig', 'Specify custom tsconfig path')
-  .example('build --tsconfig ./tsconfig.json')
-
-  .option('--transpileOnly', 'Skip type checking', false)
-  .example('build --transpileOnly')
+  .option('--format', 'Specify the module format', 'esm')
+  .example('build --format esm')
 
   .action(async (opts: BuildOpts) => {
     const buildConfigs = createBuildConfigs(opts);
-    const outputOptions = buildConfigs.output as OutputOptions[];
 
-    const bundle = await rollup(buildConfigs);
-    await Promise.all(outputOptions.map(bundle.write));
-    await bundle.close();
+    for (const config of buildConfigs) {
+      const outputOptions = config.output as OutputOptions[];
+
+      const bundle = await rollup(config);
+      await Promise.all(outputOptions.map(bundle.write));
+      await bundle.close();
+    }
   });
 
 prog.parse(process.argv);
