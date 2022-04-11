@@ -1,4 +1,4 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import shebang from 'rollup-plugin-preserve-shebang';
 import dts from 'rollup-plugin-dts';
@@ -15,28 +15,27 @@ const rollupConfig = [
     ],
     plugins: [
       typescript({
-        tsconfigDefaults: {
-          include: ['src/**/*.ts'],
-          exclude: ['node_modules', 'lib'],
-          compilerOptions: {
-            module: 'esnext',
-            target: 'es2021',
+        tsconfig: './tsconfig.json',
 
-            strict: true,
-            esModuleInterop: true,
-            skipLibCheck: true,
+        include: ['src/**/*.ts'],
+        exclude: ['node_modules', 'lib'],
+        module: 'esnext',
+        target: 'es2021',
 
-            lib: ['es2021', 'dom'],
-            forceConsistentCasingInFileNames: true,
-            moduleResolution: 'node',
+        strict: true,
+        esModuleInterop: true,
+        skipLibCheck: true,
 
-            sourceMap: false,
-            baseUrl: './src',
-            outDir: './lib',
-          },
-        },
+        lib: ['es2021', 'dom'],
+        forceConsistentCasingInFileNames: true,
+        moduleResolution: 'node',
 
-        useTsconfigDeclarationDir: true,
+        declaration: true,
+        declarationDir: 'types',
+
+        sourceMap: false,
+        baseUrl: './src',
+        outDir: './lib',
       }),
       terser(),
       shebang(),

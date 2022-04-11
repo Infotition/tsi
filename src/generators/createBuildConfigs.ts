@@ -1,11 +1,20 @@
-import { resolve } from 'path';
+import { resolve as pathResolve } from 'path';
+import { DEFAULT_EXTENSIONS } from '@babel/core';
+import { babel } from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
+import autoprefixer from 'autoprefixer';
+import cssnanoPlugin from 'cssnano';
+import postcssimport from 'postcss-import';
+import postcsspresetenv from 'postcss-preset-env';
 import { RollupOptions } from 'rollup';
+import autoExternal from 'rollup-plugin-auto-external';
 import del from 'rollup-plugin-delete';
 import dts from 'rollup-plugin-dts';
+import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
-import typescript from 'rollup-plugin-typescript2';
 
-import { appDist, appRoot, appSrc, appTypes } from '../constants/paths';
+import { appDist, appRoot, appTypes } from '../constants/paths';
 import { BuildOpts } from '../types/index.types';
 
 /**
@@ -22,8 +31,8 @@ const createRollupConfig = (opts: BuildOpts) => {
   const isEsm = format === 'esm';
 
   const filename = entry.split('/').pop()?.split('.')[0] || entry;
-  const inputFile = resolve(appRoot, entry);
-  const outputFile = resolve(appDist, `${filename}.js`);
+  const inputFile = pathResolve(appRoot, entry);
+  const outputFile = pathResolve(appDist, `${filename}.js`);
 
   return [
     {
@@ -39,32 +48,55 @@ const createRollupConfig = (opts: BuildOpts) => {
         },
       ],
       plugins: [
-        typescript({
-          tsconfigDefaults: {
-            include: [`${appSrc}/**/*.ts`],
-            exclude: ['node_modules', appDist],
-            compilerOptions: {
-              module: 'esnext',
-              target: 'es2021',
-
-              strict: true,
-              esModuleInterop: true,
-              skipLibCheck: true,
-
-              lib: ['es2021', 'dom'],
-              forceConsistentCasingInFileNames: true,
-              moduleResolution: 'node',
-
-              sourceMap: maps,
-              declaration: true,
-              declarationDir: appTypes,
-              baseUrl: appRoot,
-              outDir: appDist,
-            },
-          },
-
-          useTsconfigDeclarationDir: true,
+        postcss({
+          plugins: [
+            postcssimport,
+            autoprefixer,
+            postcsspresetenv({
+              browsers: ['last 2 versions', '> 5%'],
+            }),
+            cssnanoPlugin,
+          ],
         }),
+
+        autoExternal(),
+
+        typescript({
+          tsconfig: appRoot + '/tsconfig.json',
+
+          exclude: ['node_modules', appDist],
+          module: 'esnext',
+          target: 'es2021',
+          jsx: 'react',
+
+          strict: true,
+          esModuleInterop: true,
+          skipLibCheck: true,
+
+          lib: ['es2021', 'dom'],
+          forceConsistentCasingInFileNames: true,
+          moduleResolution: 'node',
+
+          sourceMap: maps,
+
+          declaration: true,
+          declarationDir: 'types',
+
+          baseUrl: appRoot,
+          outDir: appDist,
+        }),
+
+        babel({
+          exclude: 'node_modules/**',
+          extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
+          babelHelpers: 'bundled',
+          presets: ['@babel/preset-env', '@babel/preset-react'],
+        }),
+
+        resolve({
+          resolveOnly: [/.*\.(scss|css)/],
+        }),
+
         isProd &&
           terser({
             output: { comments: false },
@@ -79,8 +111,8 @@ const createRollupConfig = (opts: BuildOpts) => {
       ],
     },
     {
-      input: resolve(appTypes, `${filename}.d.ts`),
-      output: [{ file: resolve(appDist, `${filename}.d.ts`), format }],
+      input: pathResolve(appTypes, `${filename}.d.ts`),
+      output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
       plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
     },
   ];

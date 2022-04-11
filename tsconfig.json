@@ -1,3 +1,6 @@
 {
-  "extends": "./templates/tsconfig.json"
+  "extends": "./templates/tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+  }
 }
