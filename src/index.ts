@@ -21,7 +21,7 @@ prog
   .command('watch')
   .describe('Build your project once and exit.')
 
-  .option('--entry', 'Specify the Entry Module(s).', 'src/index.ts')
+  .option('--entry', 'Specify the Entry Module(s).')
   .example('watch --entry src/index.ts')
 
   .option('--env', 'Specify your build environment.', 'prod')
@@ -69,7 +69,7 @@ prog
   .command('build')
   .describe('Build your project once and exit.')
 
-  .option('--entry', 'Specify the Entry Module(s).', 'src/index.ts')
+  .option('--entry', 'Specify the Entry Module(s).')
   .example('build --entry src/index.ts')
 
   .option('--env', 'Specify your build environment.', 'prod')

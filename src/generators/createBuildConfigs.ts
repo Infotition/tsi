@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import { resolve as pathResolve } from 'path';
 import { DEFAULT_EXTENSIONS } from '@babel/core';
 import { babel } from '@rollup/plugin-babel';
@@ -130,11 +131,19 @@ const createRollupConfig = (opts: BuildOpts) => {
  * @returns     The rollup configuration.
  */
 export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
-  const { entry } = opts;
+  let { entry } = opts;
+
+  if (!entry) {
+    if (existsSync(pathResolve(appRoot, 'src/index.ts'))) {
+      entry = 'src/index.ts';
+    }
+
+    entry = 'src/index.tsx';
+  }
 
   // If only a single entry is provided, create its config
   if (entry.indexOf(',') === -1) {
-    return createRollupConfig(opts);
+    return createRollupConfig({ ...opts, entry });
   }
 
   // If multiple entries are provided, create rollup config for every entry
