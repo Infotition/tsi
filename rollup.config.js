@@ -1,7 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import shebang from 'rollup-plugin-preserve-shebang';
-import dts from 'rollup-plugin-dts';
+import autoExternal from 'rollup-plugin-auto-external';
 
 const rollupConfig = [
   {
@@ -14,6 +14,7 @@ const rollupConfig = [
       },
     ],
     plugins: [
+      autoExternal(),
       typescript({
         tsconfig: './tsconfig.json',
 
@@ -25,13 +26,11 @@ const rollupConfig = [
         strict: true,
         esModuleInterop: true,
         skipLibCheck: true,
+        declaration: false,
 
         lib: ['es2021', 'dom'],
         forceConsistentCasingInFileNames: true,
         moduleResolution: 'node',
-
-        declaration: true,
-        declarationDir: 'types',
 
         sourceMap: false,
         baseUrl: './src',

@@ -1,15 +1,66 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import { OutputOptions, rollup } from 'rollup';
+import ora from 'ora';
+import { OutputOptions, rollup, watch } from 'rollup';
 import sade from 'sade';
 
 import { createBuildConfigs } from './generators/createBuildConfigs';
 import type { BuildOpts } from './types/index.types';
+import { clearConsole } from './utils/clearConsole';
 import { extractFilename } from './utils/extractFilename';
 import { parseSeconds } from './utils/parseSeconds';
 
 const prog = sade('tsi');
+
+//* ----------------------------------------------------------------------------------
+//* WATCH COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('watch')
+  .describe('Build your project once and exit.')
+
+  .option('--entry', 'Specify the Entry Module(s).', 'src/index.ts')
+  .example('watch --entry src/index.ts')
+
+  .option('--env', 'Specify your build environment.', 'prod')
+  .example('watch --env prod')
+
+  .option('--maps', 'Generate source maps.', false)
+  .example('watch --maps')
+
+  .option('--format', 'Specify the module format', 'esm')
+  .example('watch --format esm')
+
+  .action(async (opts: BuildOpts) => {
+    const buildConfigs = createBuildConfigs(opts);
+
+    const spinner = ora().start();
+
+    watch(
+      buildConfigs.map((config) => {
+        return {
+          watch: {
+            silent: true,
+            include: ['src/**'],
+            exclude: ['node_modules/**'],
+          },
+          ...config,
+        };
+      }),
+    ).on('event', (event) => {
+      if (event.code === 'START') {
+        clearConsole();
+        spinner.start(chalk.bold.cyan('Compiling modules...'));
+      }
+
+      if (event.code === 'END') {
+        spinner.succeed(chalk.bold.green('Compiled successfully'));
+        console.log(chalk.dim('Watching for changes'));
+      }
+    });
+  });
 
 //* ----------------------------------------------------------------------------------
 //* BUILD COMMAND

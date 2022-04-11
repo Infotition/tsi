@@ -64,6 +64,8 @@ const createRollupConfig = (opts: BuildOpts) => {
         typescript({
           tsconfig: appRoot + '/tsconfig.json',
 
+          plugins: [{ name: 'typescript-plugin-css-modules' }],
+
           exclude: ['node_modules', appDist],
           module: 'esnext',
           target: 'es2021',
