@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
+import { emptyDirSync } from 'fs-extra';
 import ora from 'ora';
 import { OutputOptions, rollup, watch } from 'rollup';
 import sade from 'sade';
 
+import { appDist } from './constants/paths';
 import { createBuildConfigs } from './generators/createBuildConfigs';
 import type { BuildOpts } from './types/index.types';
 import { clearConsole } from './utils/clearConsole';
@@ -24,7 +26,10 @@ prog
   .option('--entry', 'Specify the Entry Module(s).')
   .example('watch --entry src/index.ts')
 
-  .option('--env', 'Specify your build environment.', 'prod')
+  .option('--types', 'Generate types.')
+  .example('watch --types')
+
+  .option('--env', 'Specify your build environment.')
   .example('watch --env prod')
 
   .option('--maps', 'Generate source maps.', false)
@@ -34,7 +39,13 @@ prog
   .example('watch --format esm')
 
   .action(async (opts: BuildOpts) => {
-    const buildConfigs = createBuildConfigs(opts);
+    const buildConfigs = createBuildConfigs({
+      ...opts,
+      env: opts.env || 'dev',
+      types: opts.types || false,
+    });
+
+    emptyDirSync(appDist);
 
     const spinner = ora().start();
 
@@ -72,6 +83,9 @@ prog
   .option('--entry', 'Specify the Entry Module(s).')
   .example('build --entry src/index.ts')
 
+  .option('--types', 'Generate types.')
+  .example('watch --types')
+
   .option('--env', 'Specify your build environment.', 'prod')
   .example('build --env prod')
 
@@ -83,10 +97,18 @@ prog
 
   .action(async (opts: BuildOpts) => {
     console.log(
-      chalk.blue(`Generating ${opts.env === 'prod' ? 'production' : 'development'} build...`),
+      chalk.blue(
+        `Generating ${(opts.env || 'prod') === 'prod' ? 'production' : 'development'} build...`,
+      ),
     );
 
-    const buildConfigs = createBuildConfigs(opts);
+    emptyDirSync(appDist);
+
+    const buildConfigs = createBuildConfigs({
+      ...opts,
+      env: opts.env || 'prod',
+      types: opts.types || true,
+    });
 
     for (const config of buildConfigs) {
       const startTime = process.hrtime();

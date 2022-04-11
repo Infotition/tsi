@@ -26,7 +26,7 @@ import { BuildOpts } from '../types/index.types';
  * @returns     The rollup configuration.
  */
 const createRollupConfig = (opts: BuildOpts) => {
-  const { format, entry, env, maps } = opts;
+  const { format, entry, env, maps, types } = opts;
 
   const isProd = env === 'prod';
   const isEsm = format === 'esm';
@@ -82,8 +82,8 @@ const createRollupConfig = (opts: BuildOpts) => {
 
           sourceMap: maps,
 
-          declaration: true,
-          declarationDir: 'types',
+          declaration: types,
+          declarationDir: types ? 'types' : undefined,
 
           baseUrl: appRoot,
           outDir: appDist,
