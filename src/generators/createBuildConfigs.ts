@@ -79,6 +79,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           lib: ['es2021', 'dom'],
           forceConsistentCasingInFileNames: true,
           moduleResolution: 'node',
+          types: ['node', 'jest'],
 
           sourceMap: maps,
 

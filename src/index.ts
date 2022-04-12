@@ -2,16 +2,21 @@
 
 import chalk from 'chalk';
 import { emptyDirSync } from 'fs-extra';
+// eslint-disable-next-line import/default
+import pkg from 'jest';
 import ora from 'ora';
 import { OutputOptions, rollup, watch } from 'rollup';
 import sade from 'sade';
 
 import { appDist } from './constants/paths';
 import { createBuildConfigs } from './generators/createBuildConfigs';
+import { createJestConfig } from './generators/createJestConfig';
 import type { BuildOpts } from './types/index.types';
 import { clearConsole } from './utils/clearConsole';
 import { extractFilename } from './utils/extractFilename';
 import { parseSeconds } from './utils/parseSeconds';
+
+const { run } = pkg;
 
 const prog = sade('tsi');
 
@@ -76,6 +81,7 @@ prog
 //* ----------------------------------------------------------------------------------
 //* BUILD COMMAND
 //* ----------------------------------------------------------------------------------
+
 prog
   .command('build')
   .describe('Build your project once and exit.')
@@ -129,6 +135,18 @@ prog
         '   ' + chalk.green('created ' + chalk.bold(output) + ' in ' + chalk.bold(elapsed) + 's'),
       );
     }
+  });
+
+//* ----------------------------------------------------------------------------------
+//* JEST COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('test')
+  .describe('Run jest test runner.')
+  .action(async () => {
+    const config = createJestConfig();
+    run(['--config', JSON.stringify(config)]);
   });
 
 prog.parse(process.argv);
