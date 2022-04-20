@@ -13,9 +13,9 @@
     "dev": "rollup -c --watch",
     "build": "rollup -c",
     "tsi": "node ./lib/index.js",
-    "clean": "npx rimraf lib",
-    "clean:full": "npx rimraf **/node_modules lib",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy": "node ./lib/index.js publish --dry",
+    "clean": "node ./lib/index.js clean"
   },
   "peerDependencies": {
     "typescript": ">=4"
@@ -33,6 +33,7 @@
     "@testing-library/react": "^13.0.1",
     "autoprefixer": "^10.4.4",
     "chalk": "^5.0.1",
+    "clean-publish": "^4.0.0",
     "cssnano": "^5.1.7",
     "fs-extra": "^10.0.1",
     "jest": "^27.5.1",

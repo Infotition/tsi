@@ -8,4 +8,4 @@ export const appSrc = resolveApp('src');
 /** The path to the build directory. */
 export const appDist = resolveApp('lib');
 /** The path to the type directory. */
-export const appTypes = resolve(appDist, 'types');
+export const appTypes = resolve(appRoot, 'types');

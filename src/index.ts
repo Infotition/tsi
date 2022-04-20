@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { execSync } from 'child_process';
+import fs from 'fs';
+import { resolve } from 'path';
 import chalk from 'chalk';
 import { emptyDirSync } from 'fs-extra';
 // eslint-disable-next-line import/default
@@ -19,6 +22,111 @@ import { parseSeconds } from './utils/parseSeconds';
 const { run } = pkg;
 
 const prog = sade('tsi');
+
+//* ----------------------------------------------------------------------------------
+//* CLEAN COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('clean')
+  .describe('Clean your project from build files and dependencies.')
+
+  .option('--modules', 'Also clean node modules folder.')
+  .example('publish --modules')
+
+  .action(async ({ modules }: { modules: boolean }) => {
+    const spinner = ora();
+    const cwd = process.cwd();
+
+    spinner.start(chalk.bold.cyan('Cleaning project...'));
+
+    const files = ['package', 'lib'];
+
+    for (const file of files) {
+      if (fs.existsSync(resolve(cwd, file))) {
+        fs.rmSync(resolve(cwd, file), { recursive: true });
+      }
+    }
+
+    if (modules && fs.existsSync(resolve(cwd, 'node_modules'))) {
+      fs.rmSync(resolve(cwd, 'node_modules'), { recursive: true });
+    }
+
+    spinner.succeed(chalk.bold.green('Cleaned successfully'));
+  });
+
+//* ----------------------------------------------------------------------------------
+//* LINT COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('lint')
+  .describe('Lint your source code.')
+
+  .action(async () => {
+    const spinner = ora();
+
+    spinner.start(chalk.bold.cyan('Linting source code...'));
+    execSync('eslint src/**/*.ts');
+    spinner.succeed(chalk.bold.green('Linting completed'));
+  });
+
+//* ----------------------------------------------------------------------------------
+//* PUBLISH COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('publish')
+  .describe('Publish your project to the npm registry.')
+
+  .option('--dry', 'Whether the project should be published or not.')
+  .example('publish --dry')
+
+  .option('--clean', 'Whether the bundle should get deleted after publishing.')
+  .example('publish --clean')
+
+  .action(async ({ dry, clean }: { dry: boolean; clean: boolean }) => {
+    const cwd = process.cwd();
+
+    if (!fs.existsSync(resolve(cwd, 'lib'))) {
+      console.log(
+        chalk.bold.red(
+          'You must build the project before you can publish it.\n  - Try running yarn build or npm run build.\n  - Or run the tsi build script directly.',
+        ),
+      );
+      return;
+    }
+
+    const spinner = ora();
+
+    spinner.start(chalk.bold.cyan('Bundling package...'));
+
+    if (fs.existsSync(resolve(cwd, 'package'))) {
+      fs.rmSync(resolve(cwd, 'package'), { recursive: true });
+    }
+
+    execSync(`npx clean-publish --without-publish --temp-dir package --clean-docs`);
+
+    const filter = ['LICENSE', 'lib', 'package.json', 'README.md'];
+
+    const files = fs.readdirSync(cwd);
+
+    for (const file of files) {
+      if (filter.includes(file)) continue;
+
+      if (fs.existsSync(resolve(cwd, 'package', file))) {
+        fs.rmSync(resolve(cwd, 'package', file), { recursive: true });
+      }
+    }
+
+    spinner.succeed(chalk.bold.green('Bundling successfully'));
+
+    execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''}`);
+
+    if (clean) {
+      fs.rmSync(resolve(cwd, 'package'), { recursive: true });
+    }
+  });
 
 //* ----------------------------------------------------------------------------------
 //* WATCH COMMAND
@@ -107,6 +215,8 @@ prog
         `Generating ${(opts.env || 'prod') === 'prod' ? 'production' : 'development'} build...`,
       ),
     );
+
+    execSync('npx tsc');
 
     emptyDirSync(appDist);
 

@@ -63,7 +63,7 @@ const createRollupConfig = (opts: BuildOpts) => {
         autoExternal(),
 
         typescript({
-          tsconfig: appRoot + '/tsconfig.json',
+          tsconfig: pathResolve(appRoot, 'tsconfig.json'),
 
           plugins: [{ name: 'typescript-plugin-css-modules' }],
 
@@ -115,7 +115,7 @@ const createRollupConfig = (opts: BuildOpts) => {
       ],
     },
     {
-      input: pathResolve(appTypes, `${filename}.d.ts`),
+      input: pathResolve(appTypes, 'src', `${filename}.d.ts`),
       output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
       plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
     },
@@ -135,11 +135,11 @@ export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
   let { entry } = opts;
 
   if (!entry) {
-    if (existsSync(pathResolve(appRoot, 'src/index.ts'))) {
-      entry = 'src/index.ts';
-    }
+    entry = 'src/index.ts';
 
-    entry = 'src/index.tsx';
+    if (existsSync(pathResolve(appRoot, 'src/index.tsx'))) {
+      entry = 'src/index.tsx';
+    }
   }
 
   // If only a single entry is provided, create its config
