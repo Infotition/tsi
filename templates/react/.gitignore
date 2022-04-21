@@ -1,0 +1,24 @@
+# dependencies
+**/node_modules/
+
+# secreat environments
+**/*.env
+**/.env
+
+# editor config
+**/.vscode
+
+# testing
+**/coverage
+
+# production / builds
+**/lib/
+**/package/
+**/.parcel-cache/
+
+# auto generated files
+**/.husky/_/
+
+# error / debug logs
+yarn-debug.log*
+yarn-error.log*
