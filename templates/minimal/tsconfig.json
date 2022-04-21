@@ -1,5 +1,5 @@
 {
-  "extends": "tsi/templates/tsconfig.json",
+  "extends": "@infotition/tsi/lib/templates/tsconfig.json",
   "compilerOptions": {
     "plugins": [{"name": "typescript-plugin-css-modules"}],
     "jsx": "react",

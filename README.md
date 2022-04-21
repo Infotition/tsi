@@ -29,7 +29,7 @@
 
 ## Quick Start
 ```bash
-npx tsi create mypackage
+npx @infotition/tsi create --template basic mypackage
 cd mypackage
 yarn dev
 ```

@@ -65,7 +65,9 @@ prog
     bootSpinner.succeed(`Created ${chalk.bold.green(pkg)}`);
 
     const nodeSpinner = ora(`Installing ${chalk.bold.green('dependencies')}...`);
-    execSync(`cd ${pkg}&&yarn install&&npx husky install`);
+    execSync(
+      `cd ${pkg}&&yarn install&&npx husky install&&git init&& git add .&&git commit -m "chore: initial commit"`,
+    );
     nodeSpinner.succeed(`Installed ${chalk.bold.green('dependencies')}`);
   });
 
