@@ -19,7 +19,7 @@
     "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "tsi": "*",
+    "@infotition/tsi": "*",
     "@infotition/eslint-config": "^2.2.0",
     "@infotition/prettier-config": "^1.0.0",
     "@types/jest": "^27.4.1",

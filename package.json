@@ -1,5 +1,5 @@
 {
-  "name": "tsi",
+  "name": "@infotition/tsi",
   "version": "1.0.0",
   "description": "Infotition's zero-config cli for TypeScript package development.",
   "type": "module",
