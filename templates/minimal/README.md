@@ -1,1 +1,1 @@
-# Basic template
+# Minimal Template

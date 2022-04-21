@@ -1,7 +1,7 @@
 {
   "name": "@infotition/tsi",
   "version": "1.0.0",
-  "description": "Infotition's zero-config cli for TypeScript package development.",
+  "description": "Infotition's zero-config CLI for TypeScript node package development.",
   "type": "module",
   "bin": {
     "tsi": "./lib/index.js"
