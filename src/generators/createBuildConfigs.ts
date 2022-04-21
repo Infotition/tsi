@@ -115,7 +115,7 @@ const createRollupConfig = (opts: BuildOpts) => {
       ],
     },
     {
-      input: pathResolve(appTypes, 'src', `${filename}.d.ts`),
+      input: pathResolve(appTypes, `${filename}.d.ts`),
       output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
       plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
     },

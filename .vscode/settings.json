@@ -16,7 +16,6 @@
         "**/tsi.d.ts": true,
         "tsconfig.json": true,
         "rollup.config.js": true,
-        "index.d.ts": true,
         ".gitignore": true,
         ".editorconfig": true,
         ".husky": true
@@ -24,7 +23,6 @@
     "hide-files.files": [
         "tsconfig.json",
         "rollup.config.js",
-        "index.d.ts",
         ".gitignore",
         ".editorconfig",
         ".husky"
