@@ -8,8 +8,8 @@
 	<h1>TSI</h1>
 	<p>Infotition's zero-config CLI for TypeScript node package development.</p>
   	<p>
-    <a href="https://github.com/Infotition/tsi/actions/workflows/main.yml" title="build state">
-			<img alt="build state" src="https://github.com/Infotition/tsi/actions/workflows/main.yml/badge.svg">
+    <a href="https://github.com/Infotition/tsi/actions/workflows/deploy.yml" title="build state">
+			<img alt="build state" src="https://github.com/Infotition/tsi/actions/workflows/deploy.yml/badge.svg">
 		</a>
 		<a href="https://github.com/Infotition/tsi/blob/main/LICENSE" title="license">
 			<img src="https://img.shields.io/github/license/Infotition/tsi" alt="license" />
@@ -31,7 +31,7 @@
 ```bash
 npx tsi create mypackage
 cd mypackage
-yarn start
+yarn dev
 ```
 
 That's all you need to do. You don't need to worry about setting up TypeScript or Rollup or Jest or other annoying tasks. Just start editing `src/index.ts`.
