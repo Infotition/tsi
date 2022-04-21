@@ -58,7 +58,7 @@ prog
 
     const bootSpinner = ora(`Creating ${chalk.bold.green(pkg)}...`);
 
-    fs.cpSync(resolve(process.argv[1], `../../templates/${template}`), resolve(cwd, pkg), {
+    fs.cpSync(resolve(process.argv[1], `../templates/${template}`), resolve(cwd, pkg), {
       recursive: true,
     });
 

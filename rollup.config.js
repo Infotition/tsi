@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import shebang from 'rollup-plugin-preserve-shebang';
 import autoExternal from 'rollup-plugin-auto-external';
+import copy from 'rollup-plugin-copy';
 
 const rollupConfig = [
   {
@@ -38,6 +39,9 @@ const rollupConfig = [
       }),
       terser(),
       shebang(),
+      copy({
+        targets: [{ src: 'templates', dest: 'lib' }],
+      }),
     ],
   },
 ];
