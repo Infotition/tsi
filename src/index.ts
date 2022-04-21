@@ -21,7 +21,53 @@ import { parseSeconds } from './utils/parseSeconds';
 
 const { run } = pkg;
 
+const templates = ['basic', 'minimal', 'react'];
 const prog = sade('tsi');
+
+//* ----------------------------------------------------------------------------------
+//* CREATE COMMAND
+//* ----------------------------------------------------------------------------------
+prog
+  .command('create <pkg>')
+  .describe('Create a new package with TSI')
+  .example('create package')
+  .option(
+    '--template',
+    `Specify a template. Allowed choices: [${Object.keys(templates).join(', ')}]`,
+  )
+  .example('create --template react package')
+  .action(async (pkg: string, { template }: { template: string }) => {
+    const cwd = process.cwd();
+
+    console.log(
+      chalk.magenta(`
+::::::::::: ::::::::  :::::
+    :+:    :+:    :+:  :+:
+    +:+    +:+         +:+
+    +#+    +#++:++#++  +#+
+    +#+           +#+  +#+
+    #+#    #+#    #+#  #+#
+    ###     ########  #####
+`),
+    );
+
+    if (fs.existsSync(resolve(cwd, pkg))) {
+      console.log(chalk.bold.red('A folder with the provided name already exists.'));
+      return;
+    }
+
+    const bootSpinner = ora(`Creating ${chalk.bold.green(pkg)}...`);
+
+    fs.cpSync(resolve(process.argv[1], `../../templates/${template}`), resolve(cwd, pkg), {
+      recursive: true,
+    });
+
+    bootSpinner.succeed(`Created ${chalk.bold.green(pkg)}`);
+
+    const nodeSpinner = ora(`Installing ${chalk.bold.green('dependencies')}...`);
+    execSync(`cd ${pkg}&&yarn install&&npx husky install`);
+    nodeSpinner.succeed(`Installed ${chalk.bold.green('dependencies')}`);
+  });
 
 //* ----------------------------------------------------------------------------------
 //* CLEAN COMMAND
