@@ -5,6 +5,9 @@
 **/*.env
 **/.env
 
+# editor config
+**/.vscode
+
 # testing
 **/coverage
 
