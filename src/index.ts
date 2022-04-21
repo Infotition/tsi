@@ -167,7 +167,7 @@ prog
 
     spinner.succeed(chalk.bold.green('Bundling successfully'));
 
-    execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''}`);
+    execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
 
     if (clean) {
       fs.rmSync(resolve(cwd, 'package'), { recursive: true });
