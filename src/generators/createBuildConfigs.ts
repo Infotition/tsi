@@ -94,7 +94,16 @@ const createRollupConfig = (opts: BuildOpts) => {
           exclude: 'node_modules/**',
           extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
           babelHelpers: 'bundled',
-          presets: ['@babel/preset-env', '@babel/preset-react'],
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                modules: false,
+                targets: ['>0.2%', 'not dead', 'not op_mini all'],
+              },
+            ],
+            '@babel/preset-react',
+          ],
         }),
 
         resolve({
