@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { resolve as pathResolve } from 'path';
-import { DEFAULT_EXTENSIONS } from '@babel/core';
-import { babel } from '@rollup/plugin-babel';
+//import { DEFAULT_EXTENSIONS } from '@babel/core';
+//import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
@@ -62,7 +62,7 @@ const createRollupConfig = (opts: BuildOpts) => {
 
         autoExternal(),
 
-        babel({
+        /*babel({
           exclude: 'node_modules/**',
           extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
           babelHelpers: 'bundled',
@@ -76,7 +76,7 @@ const createRollupConfig = (opts: BuildOpts) => {
             ],
             '@babel/preset-react',
           ],
-        }),
+        }),*/
 
         typescript({
           tsconfig: pathResolve(appRoot, 'tsconfig.json'),
