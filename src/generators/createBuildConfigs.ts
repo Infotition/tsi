@@ -62,6 +62,22 @@ const createRollupConfig = (opts: BuildOpts) => {
 
         autoExternal(),
 
+        babel({
+          exclude: 'node_modules/**',
+          extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
+          babelHelpers: 'bundled',
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                modules: false,
+                targets: ['>0.2%', 'not dead', 'not op_mini all'],
+              },
+            ],
+            '@babel/preset-react',
+          ],
+        }),
+
         typescript({
           tsconfig: pathResolve(appRoot, 'tsconfig.json'),
 
@@ -88,22 +104,6 @@ const createRollupConfig = (opts: BuildOpts) => {
 
           baseUrl: appRoot,
           outDir: appDist,
-        }),
-
-        babel({
-          exclude: 'node_modules/**',
-          extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
-          babelHelpers: 'bundled',
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                modules: false,
-                targets: ['>0.2%', 'not dead', 'not op_mini all'],
-              },
-            ],
-            '@babel/preset-react',
-          ],
         }),
 
         resolve({
