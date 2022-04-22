@@ -14,6 +14,6 @@ export const createJestConfig = (): Config.InitialOptions => ({
   },
   collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx,js,jsx}'],
   testMatch: ['<rootDir>/**/*.test.(ts|tsx)'],
-  setupFilesAfterEnv: [`<rootDir>/node_modules/tsi/lib/templates/jest.setup.ts`],
+  setupFilesAfterEnv: [`<rootDir>/node_modules/@infotition/tsi/lib/templates/jest.setup.ts`],
   rootDir: appRoot,
 });
