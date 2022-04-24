@@ -62,18 +62,13 @@ const createRollupConfig = (opts: BuildOpts) => {
 
         autoExternal(),
 
-        babel({
-          exclude: 'node_modules/**',
-          extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
-          babelHelpers: 'bundled',
-          env: {
-            production: {
-              plugins: [
-                ['react-remove-properties', { properties: ['data-test-id', 'data-testid'] }],
-              ],
-            },
-          },
-        }),
+        isProd &&
+          babel({
+            exclude: 'node_modules/**',
+            extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
+            babelHelpers: 'bundled',
+            plugins: [['react-remove-properties', { properties: ['data-test-id', 'data-testid'] }]],
+          }),
 
         /*babel({
           exclude: 'node_modules/**',
