@@ -1,7 +1,7 @@
 import { existsSync } from 'fs';
 import { resolve as pathResolve } from 'path';
-import { DEFAULT_EXTENSIONS } from '@babel/core';
-import { babel } from '@rollup/plugin-babel';
+//import { DEFAULT_EXTENSIONS } from '@babel/core';
+//import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
@@ -17,6 +17,15 @@ import { terser } from 'rollup-plugin-terser';
 
 import { appDist, appRoot, appTypes } from '../constants/paths';
 import { BuildOpts } from '../types/index.types';
+
+const removeAttributes = () => {
+  return {
+    name: 'removeAttributes',
+    transform: (code: string) => {
+      return code.replace(/"data-testid": ".*?",?/gm, '');
+    },
+  };
+};
 
 /**
  * From user build option input an array rollup configuration gets generated and
@@ -34,6 +43,8 @@ const createRollupConfig = (opts: BuildOpts) => {
   const filename = entry.split('/').pop()?.split('.')[0] || entry;
   const inputFile = pathResolve(appRoot, entry);
   const outputFile = pathResolve(appDist, `${filename}.js`);
+
+  console.log(isProd);
 
   return [
     {
@@ -62,14 +73,6 @@ const createRollupConfig = (opts: BuildOpts) => {
 
         autoExternal(),
 
-        isProd &&
-          babel({
-            exclude: 'node_modules/**',
-            extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
-            babelHelpers: 'bundled',
-            plugins: [['react-remove-properties', { properties: ['data-test-id', 'data-testid'] }]],
-          }),
-
         /*babel({
           exclude: 'node_modules/**',
           extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
@@ -85,6 +88,8 @@ const createRollupConfig = (opts: BuildOpts) => {
             '@babel/preset-react',
           ],
         }),*/
+
+        removeAttributes(),
 
         typescript({
           tsconfig: pathResolve(appRoot, 'tsconfig.json'),

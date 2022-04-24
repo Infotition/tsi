@@ -1,6 +1,6 @@
 {
   "name": "@infotition/tsi",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Infotition's zero-config CLI for TypeScript node package development.",
   "type": "module",
   "bin": {
@@ -32,8 +32,6 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.1",
     "autoprefixer": "^10.4.4",
-    "babel-plugin-jsx-remove-data-test-id": "^3.0.0",
-    "babel-plugin-react-remove-properties": "^0.3.0",
     "chalk": "^5.0.1",
     "clean-publish": "^4.0.0",
     "cssnano": "^5.1.7",
