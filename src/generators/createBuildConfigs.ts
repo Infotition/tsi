@@ -44,8 +44,6 @@ const createRollupConfig = (opts: BuildOpts) => {
   const inputFile = pathResolve(appRoot, entry);
   const outputFile = pathResolve(appDist, `${filename}.js`);
 
-  console.log(isProd);
-
   return [
     {
       input: inputFile,
@@ -63,6 +61,9 @@ const createRollupConfig = (opts: BuildOpts) => {
         postcss({
           modules: {
             generateScopedName: '[hash:base64:8]',
+          },
+          inject(cssVariableName) {
+            return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
           },
           plugins: [
             postcssimport,
