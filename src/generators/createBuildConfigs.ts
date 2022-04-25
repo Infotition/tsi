@@ -61,6 +61,9 @@ const createRollupConfig = (opts: BuildOpts) => {
       ],
       plugins: [
         postcss({
+          modules: {
+            generateScopedName: '[hash:base64:8]',
+          },
           plugins: [
             postcssimport,
             autoprefixer,

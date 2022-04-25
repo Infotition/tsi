@@ -40,7 +40,10 @@ const rollupConfig = [
       terser(),
       shebang(),
       copy({
-        targets: [{ src: 'templates', dest: 'lib' }],
+        targets: [
+          { src: 'templates', dest: 'lib' },
+          { src: 'index.d.ts', dest: 'lib' },
+        ],
       }),
     ],
   },

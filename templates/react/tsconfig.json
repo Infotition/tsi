@@ -9,5 +9,5 @@
     "baseUrl": "src",
     "outDir": "lib"
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts", "node_modules/tsi/index.d.ts"]
+  "include": ["src/**/*.tsx", "src/**/*.ts", "node_modules/@infotition/tsi/lib/index.d.ts"]
 }
