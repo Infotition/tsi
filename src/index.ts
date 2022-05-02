@@ -302,8 +302,12 @@ prog
 prog
   .command('test')
   .describe('Run jest test runner.')
-  .action(async () => {
-    const config = createJestConfig();
+
+  .option('--tsi', 'Specify the node_modules where tsi is located.')
+  .example('test --tsi ../../')
+
+  .action(async ({ tsi }: { tsi: string | undefined }) => {
+    const config = createJestConfig(tsi);
     run(['--config', JSON.stringify(config)]);
   });
 
