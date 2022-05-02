@@ -133,7 +133,10 @@ prog
   .option('--clean', 'Whether the bundle should get deleted after publishing.')
   .example('publish --clean')
 
-  .action(async ({ dry, clean }: { dry: boolean; clean: boolean }) => {
+  .option('--license', 'Specify the license path.')
+  .example('publish --license ../LICENSE')
+
+  .action(async ({ dry, clean, license }: { dry: boolean; clean: boolean; license: string }) => {
     const cwd = process.cwd();
 
     if (!fs.existsSync(resolve(cwd, 'lib'))) {
@@ -167,9 +170,22 @@ prog
       }
     }
 
+    if (license) {
+      fs.copyFileSync(resolve(cwd, license), resolve(cwd, 'package/LICENSE'));
+    }
+
     spinner.succeed(chalk.bold.green('Bundling successfully'));
 
-    execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
+    const localVersion = JSON.parse(
+      fs.readFileSync(resolve(cwd, 'package.json')).toString(),
+    ).version;
+    const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
+
+    if (localVersion !== remoteVersion) {
+      execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
+    } else {
+      console.log(chalk.bold.red('Package already up to date.'));
+    }
 
     if (clean) {
       fs.rmSync(resolve(cwd, 'package'), { recursive: true });
