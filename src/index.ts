@@ -176,15 +176,19 @@ prog
 
     spinner.succeed(chalk.bold.green('Bundling successfully'));
 
-    const localVersion = JSON.parse(
-      fs.readFileSync(resolve(cwd, 'package.json')).toString(),
-    ).version;
-    const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
-
-    if (localVersion !== remoteVersion) {
+    if (dry) {
       execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
     } else {
-      console.log(chalk.bold.red('Package already up to date.'));
+      const localVersion = JSON.parse(
+        fs.readFileSync(resolve(cwd, 'package.json')).toString(),
+      ).version;
+      const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
+
+      if (localVersion !== remoteVersion) {
+        execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
+      } else {
+        console.log(chalk.bold.red('Package already up to date.'));
+      }
     }
 
     if (clean) {
@@ -280,14 +284,14 @@ prog
       ),
     );
 
-    execSync('npx tsc');
+    if (opts.types) execSync('npx tsc');
 
     emptyDirSync(appDist);
 
     const buildConfigs = createBuildConfigs({
       ...opts,
       env: opts.env || 'prod',
-      types: opts.types || true,
+      types: opts.types,
     });
 
     for (const config of buildConfigs) {

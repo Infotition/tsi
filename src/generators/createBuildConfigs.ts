@@ -104,6 +104,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           module: 'esnext',
           target: 'es2021',
           jsx: 'react',
+          resolveJsonModule: true,
 
           strict: true,
           esModuleInterop: true,
@@ -140,11 +141,15 @@ const createRollupConfig = (opts: BuildOpts) => {
           }),
       ],
     },
-    {
-      input: pathResolve(appTypes, `${filename}.d.ts`),
-      output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
-      plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
-    },
+    ...(types
+      ? [
+          {
+            input: pathResolve(appTypes, `${filename}.d.ts`),
+            output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
+            plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
+          },
+        ]
+      : []),
   ];
 };
 
