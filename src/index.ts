@@ -176,8 +176,14 @@ prog
 
     spinner.succeed(chalk.bold.green('Bundling successfully'));
 
+    const authToken = process.env.NODE_AUTH_TOKEN;
+
+    const withAuth = authToken ? `npx cross-env NODE_AUTH_TOKEN=${authToken} ` : '';
+    const withDry = dry ? '--dry-run' : '';
+    const publishCommand = `cd package&&${withAuth}npm publish ${withDry} --access public`;
+
     if (dry) {
-      execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
+      execSync(publishCommand);
     } else {
       const localVersion = JSON.parse(
         fs.readFileSync(resolve(cwd, 'package.json')).toString(),
@@ -185,7 +191,7 @@ prog
       const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
 
       if (localVersion !== remoteVersion) {
-        execSync(`cd package&&npm publish ${dry ? '--dry-run' : ''} --access public`);
+        execSync(publishCommand);
       } else {
         console.log(chalk.bold.red('Package already up to date.'));
       }
