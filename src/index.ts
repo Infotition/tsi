@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from 'child_process';
+import { exec, execSync } from 'child_process';
 import fs from 'fs';
 import { resolve } from 'path';
 import chalk from 'chalk';
@@ -69,6 +69,27 @@ prog
       `cd ${pkg}&&yarn install&&git init&&git add .&&git commit -m "chore: initial commit"&&npx husky install&&`,
     );
     nodeSpinner.succeed(`Installed ${chalk.bold.green('dependencies')}`);
+  });
+
+//* ----------------------------------------------------------------------------------
+//* STORYBOOK COMMAND
+//* ----------------------------------------------------------------------------------
+
+prog
+  .command('storybook')
+  .describe('Start the storybook development server.')
+
+  .action(async () => {
+    const spinner = ora();
+    spinner.start(chalk.bold.cyan('Running storybook server...\n'));
+
+    const storybook = exec(
+      'start-storybook -p 6006 --quiet -c ../../node_modules/@infotition/tsi/lib/templates/.storybook',
+    );
+
+    //storybook.stdout?.on('data', () => console.log('Build Storybook'));
+    //storybook.stderr?.on('data', (data) => console.log(data.toString()));
+    storybook.on('exit', () => spinner.succeed(chalk.bold.green('Storybook closed')));
   });
 
 //* ----------------------------------------------------------------------------------
