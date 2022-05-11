@@ -9,5 +9,5 @@
     "baseUrl": "src",
     "outDir": "lib"
   },
-  "include": ["src/**/*.ts", "__tests__/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

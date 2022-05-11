@@ -272,7 +272,10 @@ prog
   .example('build --entry src/index.ts')
 
   .option('--types', 'Generate types.')
-  .example('watch --types')
+  .example('build --types')
+
+  .option('--tsc', 'Generate types via tsc.', false)
+  .example('build --tsc')
 
   .option('--env', 'Specify your build environment.', 'prod')
   .example('build --env prod')
@@ -290,7 +293,7 @@ prog
       ),
     );
 
-    if (opts.types) execSync('npx tsc');
+    if (opts.types && opts.tsc) execSync('npx tsc');
 
     emptyDirSync(appDist);
 

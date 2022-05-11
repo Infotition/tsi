@@ -27,6 +27,32 @@ const removeAttributes = () => {
   };
 };
 
+const getTypeGeneration = (
+  tsc: boolean,
+  filename: string,
+  format: 'cjs' | 'esm',
+): RollupOptions[] => {
+  console.log(tsc);
+
+  if (tsc) {
+    return [
+      {
+        input: pathResolve(appTypes, `${filename}.d.ts`),
+        output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
+        plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
+      },
+    ];
+  }
+
+  return [
+    {
+      input: pathResolve(appDist, `types/${filename}.d.ts`),
+      output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
+      plugins: [dts(), del({ targets: pathResolve(appDist, 'types'), hook: 'buildEnd' })],
+    },
+  ];
+};
+
 /**
  * From user build option input an array rollup configuration gets generated and
  * returned. Each element must be bundled and written with rollup.
@@ -35,7 +61,7 @@ const removeAttributes = () => {
  * @returns     The rollup configuration.
  */
 const createRollupConfig = (opts: BuildOpts) => {
-  const { format, entry, env, maps, types } = opts;
+  const { format, entry, env, maps, types, tsc } = opts;
 
   const isProd = env === 'prod';
   const isEsm = format === 'esm';
@@ -141,15 +167,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           }),
       ],
     },
-    ...(types
-      ? [
-          {
-            input: pathResolve(appTypes, `${filename}.d.ts`),
-            output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
-            plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
-          },
-        ]
-      : []),
+    ...(types ? getTypeGeneration(tsc, filename, format) : []),
   ];
 };
 

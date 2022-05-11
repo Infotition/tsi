@@ -10,4 +10,6 @@ export type BuildOpts = {
   env: 'dev' | 'prod';
   /** Whether source maps should get generated or not (false). */
   maps: boolean;
+  /** Whether types should get generated with tsc instead of rollup. */
+  tsc: boolean;
 };
