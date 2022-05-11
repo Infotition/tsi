@@ -21,7 +21,7 @@ import { parseSeconds } from './utils/parseSeconds';
 
 const { run } = pkg;
 
-const templates = ['basic', 'minimal', 'react'];
+const templates = ['basic', 'turbo-basic', 'react'];
 const prog = sade('tsi');
 
 //* ----------------------------------------------------------------------------------
