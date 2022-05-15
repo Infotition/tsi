@@ -1,8 +1,7 @@
-import { resolve } from 'path';
 import { Config } from '@jest/types';
 import { appRoot } from '../constants/paths';
 
-export const createJestConfig = (tsi: string | undefined): Config.InitialOptions => ({
+export const createJestConfig = (setupPath: string): Config.InitialOptions => ({
   clearMocks: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
@@ -15,10 +14,6 @@ export const createJestConfig = (tsi: string | undefined): Config.InitialOptions
   },
   collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx,js,jsx}'],
   testMatch: ['<rootDir>/**/*.test.(ts|tsx)'],
-  setupFilesAfterEnv: [
-    tsi
-      ? resolve(appRoot, `${tsi}/node_modules/@infotition/tsi/lib/templates/jest.setup.ts`)
-      : `<rootDir>/node_modules/@infotition/tsi/lib/templates/jest.setup.ts`,
-  ],
+  setupFilesAfterEnv: [setupPath],
   rootDir: appRoot,
 });

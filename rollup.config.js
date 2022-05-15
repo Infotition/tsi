@@ -37,7 +37,7 @@ const rollupConfig = [
         baseUrl: './src',
         outDir: './lib',
       }),
-      terser(),
+      //terser(),
       shebang(),
       copy({
         targets: [

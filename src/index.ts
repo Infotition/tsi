@@ -1,25 +1,22 @@
 #!/usr/bin/env node
 
 import { exec, execSync } from 'child_process';
-import fs from 'fs';
-import { resolve } from 'path';
+import { existsSync, rmSync, cpSync, readdirSync, readFileSync, copyFileSync } from 'fs';
+import { resolve, join } from 'path';
 import chalk from 'chalk';
 import { emptyDirSync } from 'fs-extra';
-// eslint-disable-next-line import/default
-import pkg from 'jest';
+import jest from 'jest';
 import ora from 'ora';
 import { OutputOptions, rollup, watch } from 'rollup';
 import sade from 'sade';
 
-import { appDist } from './constants/paths';
+import { appDist, appRoot } from './constants/paths';
 import { createBuildConfigs } from './generators/createBuildConfigs';
 import { createJestConfig } from './generators/createJestConfig';
 import type { BuildOpts } from './types/index.types';
 import { clearConsole } from './utils/clearConsole';
 import { extractFilename } from './utils/extractFilename';
 import { parseSeconds } from './utils/parseSeconds';
-
-const { run } = pkg;
 
 const templates = ['basic', 'turbo-basic', 'react'];
 const prog = sade('tsi');
@@ -51,14 +48,14 @@ prog
 `),
     );
 
-    if (fs.existsSync(resolve(cwd, pkg))) {
+    if (existsSync(resolve(cwd, pkg))) {
       console.log(chalk.bold.red('A folder with the provided name already exists.'));
       return;
     }
 
     const bootSpinner = ora(`Creating ${chalk.bold.green(pkg)}...`);
 
-    fs.cpSync(resolve(process.argv[1], `../templates/${template}`), resolve(cwd, pkg), {
+    cpSync(resolve(process.argv[1], `../templates/${template}`), resolve(cwd, pkg), {
       recursive: true,
     });
 
@@ -112,13 +109,13 @@ prog
     const files = ['package', 'lib'];
 
     for (const file of files) {
-      if (fs.existsSync(resolve(cwd, file))) {
-        fs.rmSync(resolve(cwd, file), { recursive: true });
+      if (existsSync(resolve(cwd, file))) {
+        rmSync(resolve(cwd, file), { recursive: true });
       }
     }
 
-    if (modules && fs.existsSync(resolve(cwd, 'node_modules'))) {
-      fs.rmSync(resolve(cwd, 'node_modules'), { recursive: true });
+    if (modules && existsSync(resolve(cwd, 'node_modules'))) {
+      rmSync(resolve(cwd, 'node_modules'), { recursive: true });
     }
 
     spinner.succeed(chalk.bold.green('Cleaned successfully'));
@@ -160,7 +157,7 @@ prog
   .action(async ({ dry, clean, license }: { dry: boolean; clean: boolean; license: string }) => {
     const cwd = process.cwd();
 
-    if (!fs.existsSync(resolve(cwd, 'lib'))) {
+    if (!existsSync(resolve(cwd, 'lib'))) {
       console.log(
         chalk.bold.red(
           'You must build the project before you can publish it.\n  - Try running yarn build or npm run build.\n  - Or run the tsi build script directly.',
@@ -173,26 +170,26 @@ prog
 
     spinner.start(chalk.bold.cyan('Bundling package...'));
 
-    if (fs.existsSync(resolve(cwd, 'package'))) {
-      fs.rmSync(resolve(cwd, 'package'), { recursive: true });
+    if (existsSync(resolve(cwd, 'package'))) {
+      rmSync(resolve(cwd, 'package'), { recursive: true });
     }
 
     execSync(`npx clean-publish --without-publish --temp-dir package --clean-docs`);
 
     const filter = ['LICENSE', 'lib', 'package.json', 'README.md'];
 
-    const files = fs.readdirSync(cwd);
+    const files = readdirSync(cwd);
 
     for (const file of files) {
       if (filter.includes(file)) continue;
 
-      if (fs.existsSync(resolve(cwd, 'package', file))) {
-        fs.rmSync(resolve(cwd, 'package', file), { recursive: true });
+      if (existsSync(resolve(cwd, 'package', file))) {
+        rmSync(resolve(cwd, 'package', file), { recursive: true });
       }
     }
 
     if (license) {
-      fs.copyFileSync(resolve(cwd, license), resolve(cwd, 'package/LICENSE'));
+      copyFileSync(resolve(cwd, license), resolve(cwd, 'package/LICENSE'));
     }
 
     spinner.succeed(chalk.bold.green('Bundling successfully'));
@@ -207,7 +204,7 @@ prog
       execSync(publishCommand);
     } else {
       const localVersion = JSON.parse(
-        fs.readFileSync(resolve(cwd, 'package.json')).toString(),
+        readFileSync(resolve(cwd, 'package.json')).toString(),
       ).version;
       const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
 
@@ -219,7 +216,7 @@ prog
     }
 
     if (clean) {
-      fs.rmSync(resolve(cwd, 'package'), { recursive: true });
+      rmSync(resolve(cwd, 'package'), { recursive: true });
     }
   });
 
@@ -353,12 +350,27 @@ prog
   .command('test')
   .describe('Run jest test runner.')
 
-  .option('--tsi', 'Specify the node_modules where tsi is located.')
-  .example('test --tsi ../../')
+  .action(async () => {
+    // Look up max 3 folders for the setup file. This is needed so the command works with monorepos.
+    // Yarn workspaces e.g. store all modules in the monorepo root dir.
+    for (let i = 0; i < 3; i += 1) {
+      const setupPath = join(
+        appRoot,
+        '../'.repeat(i),
+        '/node_modules/@infotition/tsi/lib/templates/jest.setup.ts',
+      );
 
-  .action(async ({ tsi }: { tsi: string | undefined }) => {
-    const config = createJestConfig(tsi);
-    run(['--config', JSON.stringify(config)]);
+      if (existsSync(setupPath)) {
+        jest.run(['--config', JSON.stringify(createJestConfig(setupPath))]);
+        return;
+      }
+    }
+
+    console.log(
+      chalk.bold.red(
+        'The infotition jest setup file was not found in a range of 3 folders up. Please make sure, the newest tsi version is installed.',
+      ),
+    );
   });
 
 prog.parse(process.argv);

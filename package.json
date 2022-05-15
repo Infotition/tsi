@@ -90,6 +90,9 @@
     "env": {
       "es2021": true
     },
+    "rules": {
+      "import/default": "off"
+    },
     "parserOptions": {
       "project": [
         "tsconfig.json"
