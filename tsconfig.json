@@ -1,6 +1,14 @@
 {
-  "extends": "./templates/tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-  }
+    "module": "esnext",
+    "target": "es2021",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "lib": ["es2021", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+  },
 }

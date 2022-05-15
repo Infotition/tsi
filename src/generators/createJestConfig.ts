@@ -1,5 +1,5 @@
 import { Config } from '@jest/types';
-import { appRoot } from '../constants/paths';
+import { appRoot } from '../utils/constants';
 
 export const createJestConfig = (setupPath: string): Config.InitialOptions => ({
   clearMocks: true,

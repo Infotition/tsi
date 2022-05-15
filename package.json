@@ -3,6 +3,7 @@
   "version": "2.9.0",
   "description": "Infotition's zero-config CLI for TypeScript node package development.",
   "type": "module",
+  "types": "index.d.ts",
   "bin": {
     "tsi": "./lib/index.js"
   },
@@ -92,11 +93,6 @@
     },
     "rules": {
       "import/default": "off"
-    },
-    "parserOptions": {
-      "project": [
-        "tsconfig.json"
-      ]
     },
     "ignorePatterns": [
       "*.js",

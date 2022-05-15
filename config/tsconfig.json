@@ -10,5 +10,9 @@
     "lib": ["es2021", "dom"],
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
+
+    "types": ["node", "jest", "@testing-library/jest-dom", "@infotition/tsi"],
+    "jsx": "react-jsx",
+    "plugins": [{"name": "typescript-plugin-css-modules"}],
   },
 }

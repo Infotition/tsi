@@ -1,20 +1,22 @@
 {
-  "name": "basic-template",
+  "name": "@infotition/basic-template",
   "version": "1.0.0",
   "description": "",
-  "license": "MIT",
   "author": "infotition",
+  "license": "MIT",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "sideEffects": false,
   "repository": "",
+  "keywords": [],
   "scripts": {
     "dev": "tsi watch",
-    "test": "tsi test --tsi ../..",
-    "build": "tsi build --types",
+    "test": "tsi test",
     "lint": "tsi lint",
-    "deploy": "tsi publish --license ../../LICENSE",
     "clean": "tsi clean",
+    "build": "tsi build --types",
+    "deploy": "tsi publish --dry",
+    "docs": "tsi typedoc",
     "version": "echo %npm_package_version%"
   },
   "devDependencies": {

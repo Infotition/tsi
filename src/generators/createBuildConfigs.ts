@@ -15,8 +15,8 @@ import dts from 'rollup-plugin-dts';
 import postcss from 'rollup-plugin-postcss';
 import { terser } from 'rollup-plugin-terser';
 
-import { appDist, appRoot, appTypes } from '../constants/paths';
-import { BuildOpts } from '../types/index.types';
+import { BuildOpts } from '../actions/build.action';
+import { appDist, appRoot } from '../utils/constants';
 
 const removeAttributes = () => {
   return {
@@ -27,30 +27,6 @@ const removeAttributes = () => {
   };
 };
 
-const getTypeGeneration = (
-  tsc: boolean,
-  filename: string,
-  format: 'cjs' | 'esm',
-): RollupOptions[] => {
-  if (tsc) {
-    return [
-      {
-        input: pathResolve(appTypes, `${filename}.d.ts`),
-        output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
-        plugins: [dts(), del({ targets: appTypes, hook: 'buildEnd' })],
-      },
-    ];
-  }
-
-  return [
-    {
-      input: pathResolve(appDist, `types/${filename}.d.ts`),
-      output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
-      plugins: [dts(), del({ targets: pathResolve(appDist, 'types'), hook: 'buildEnd' })],
-    },
-  ];
-};
-
 /**
  * From user build option input an array rollup configuration gets generated and
  * returned. Each element must be bundled and written with rollup.
@@ -59,7 +35,7 @@ const getTypeGeneration = (
  * @returns     The rollup configuration.
  */
 const createRollupConfig = (opts: BuildOpts) => {
-  const { format, entry, env, maps, types, tsc } = opts;
+  const { format, entry, env, maps, types } = opts;
 
   const isProd = env === 'prod';
   const isEsm = format === 'esm';
@@ -124,6 +100,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           plugins: [{ name: 'typescript-plugin-css-modules' }],
 
           exclude: ['node_modules', appDist],
+
           module: 'esnext',
           target: 'es2021',
           jsx: 'react-jsx',
@@ -135,7 +112,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           lib: ['es2021', 'dom'],
           forceConsistentCasingInFileNames: true,
           moduleResolution: 'node',
-          types: ['node', 'jest', '@testing-library/jest-dom'],
+          types: ['node', 'jest', '@testing-library/jest-dom', '@infotition/tsi'],
 
           sourceMap: maps,
 
@@ -163,7 +140,11 @@ const createRollupConfig = (opts: BuildOpts) => {
           }),
       ],
     },
-    ...(types ? getTypeGeneration(tsc, filename, format) : []),
+    {
+      input: pathResolve(appDist, `types/${filename}.d.ts`),
+      output: [{ file: pathResolve(appDist, `${filename}.d.ts`), format }],
+      plugins: [dts(), del({ targets: pathResolve(appDist, 'types'), hook: 'buildEnd' })],
+    },
   ];
 };
 

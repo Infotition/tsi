@@ -42,6 +42,7 @@ const rollupConfig = [
       copy({
         targets: [
           { src: 'templates', dest: 'lib' },
+          { src: 'config', dest: 'lib' },
           { src: 'index.d.ts', dest: 'lib' },
         ],
       }),

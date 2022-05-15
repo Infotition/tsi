@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { resolveApp } from '../utils/resolveApp';
+import { resolveApp } from './resolveApp';
 
 /** The root folder of the project. */
 export const appRoot = resolveApp('.');
