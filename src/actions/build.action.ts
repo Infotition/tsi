@@ -18,6 +18,8 @@ export type BuildOpts = {
   env: 'dev' | 'prod';
   /** Whether source maps should get generated or not (false). */
   maps: boolean;
+  /** Whether css should get extracted or bundled in js. */
+  extract: boolean;
 };
 
 export const buildAction = async (opts: BuildOpts) => {

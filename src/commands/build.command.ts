@@ -21,5 +21,8 @@ export const build = (prog: Sade) => {
     .option('--format', 'Specify the module format', 'esm')
     .example('build --format esm')
 
+    .option('--extract', 'Extract css into own files', false)
+    .example('build --extract')
+
     .action(buildAction);
 };

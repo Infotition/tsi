@@ -12,8 +12,5 @@ export const publish = (prog: Sade) => {
     .option('--clean', 'Whether the bundle should get deleted after publishing.')
     .example('publish --clean')
 
-    .option('--license', 'Specify the license path.')
-    .example('publish --license ../LICENSE')
-
     .action(publishAction);
 };

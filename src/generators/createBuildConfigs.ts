@@ -1,7 +1,8 @@
 import { existsSync } from 'fs';
-import { resolve as pathResolve } from 'path';
+import { resolve as pathResolve, basename } from 'path';
 //import { DEFAULT_EXTENSIONS } from '@babel/core';
 //import { babel } from '@rollup/plugin-babel';
+import { cwd } from 'process';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import autoprefixer from 'autoprefixer';
@@ -35,7 +36,7 @@ const removeAttributes = () => {
  * @returns     The rollup configuration.
  */
 const createRollupConfig = (opts: BuildOpts) => {
-  const { format, entry, env, maps, types } = opts;
+  const { format, entry, env, maps, types, extract } = opts;
 
   const isProd = env === 'prod';
   const isEsm = format === 'esm';
@@ -62,6 +63,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           modules: {
             generateScopedName: '[hash:base64:8]',
           },
+          extract: extract ? pathResolve(appDist, `${basename(cwd())}.min.css`) : false,
           inject(cssVariableName) {
             return `import styleInject from 'style-inject';\nstyleInject(${cssVariableName});`;
           },

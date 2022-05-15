@@ -21,5 +21,8 @@ export const watch = (prog: Sade) => {
     .option('--format', 'Specify the module format', 'esm')
     .example('watch --format esm')
 
+    .option('--extract', 'Extract css into own files', false)
+    .example('build --extract')
+
     .action(watchAction);
 };
