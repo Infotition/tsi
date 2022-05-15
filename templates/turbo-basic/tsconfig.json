@@ -2,12 +2,8 @@
   "extends": "@infotition/tsi/lib/templates/tsconfig.json",
   "compilerOptions": {
     "plugins": [{"name": "typescript-plugin-css-modules"}],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "types": ["node", "jest", "@testing-library/jest-dom"],
-    "declaration": true,
-    "declarationDir": "types",
-    "baseUrl": "src",
-    "outDir": "lib"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.tsx", "src/**/*.ts", "node_modules/@infotition/tsi/lib/index.d.ts"],
 }

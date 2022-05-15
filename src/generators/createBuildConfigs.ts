@@ -32,8 +32,6 @@ const getTypeGeneration = (
   filename: string,
   format: 'cjs' | 'esm',
 ): RollupOptions[] => {
-  console.log(tsc);
-
   if (tsc) {
     return [
       {
@@ -122,15 +120,13 @@ const createRollupConfig = (opts: BuildOpts) => {
         removeAttributes(),
 
         typescript({
-          tsconfig: pathResolve(appRoot, 'tsconfig.json'),
-
+          tsconfig: './tsconfig.json',
           plugins: [{ name: 'typescript-plugin-css-modules' }],
 
           exclude: ['node_modules', appDist],
           module: 'esnext',
           target: 'es2021',
-          jsx: 'react',
-          resolveJsonModule: true,
+          jsx: 'react-jsx',
 
           strict: true,
           esModuleInterop: true,
@@ -139,7 +135,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           lib: ['es2021', 'dom'],
           forceConsistentCasingInFileNames: true,
           moduleResolution: 'node',
-          types: ['node', 'jest'],
+          types: ['node', 'jest', '@testing-library/jest-dom'],
 
           sourceMap: maps,
 
