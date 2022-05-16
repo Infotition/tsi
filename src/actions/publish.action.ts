@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync } from 'fs';
+import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -32,6 +32,12 @@ export const publishAction = async ({ dry, clean }: PublishOpts) => {
   }
 
   execSync(`npx clean-publish --without-publish --temp-dir package --clean-docs`);
+
+  // Replace table of contents details and back to top link
+  let readMe = readFileSync(resolve(cwd, 'package', 'README.md')).toString();
+  readMe = readMe.replaceAll(/<details>(.|\n)*<\/details>\n*/gm, '');
+  readMe = readMe.replaceAll(/<p align="right">\(<a href="#top">back to top<\/a>\)<\/p>\n*/gm, '');
+  writeFileSync(resolve(cwd, 'package', 'README.md'), readMe);
 
   const filter = ['LICENSE', 'lib', 'package.json', 'README.md'];
 
