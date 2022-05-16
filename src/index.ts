@@ -13,5 +13,6 @@ commands.watch(prog);
 commands.build(prog);
 commands.lint(prog);
 commands.test(prog);
+commands.docs(prog);
 
 prog.parse(process.argv);
