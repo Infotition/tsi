@@ -70,9 +70,9 @@ export const publishAction = async ({ dry, clean }: PublishOpts) => {
   } else {
     const localVersion = JSON.parse(readFileSync(resolve(cwd, 'package.json')).toString())
       .version as string;
-    const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
-
-    console.log(localVersion, remoteVersion);
+    const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' })
+      .trim()
+      .split('\n')[1];
 
     if (localVersion !== remoteVersion) {
       execSync(publishCommand);

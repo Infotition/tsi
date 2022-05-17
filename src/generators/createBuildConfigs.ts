@@ -114,7 +114,7 @@ const createRollupConfig = (opts: BuildOpts) => {
           lib: ['es2021', 'dom'],
           forceConsistentCasingInFileNames: true,
           moduleResolution: 'node',
-          types: ['node', 'jest', '@testing-library/jest-dom', '@infotition/tsi'],
+          types: ['node', 'jest', '@testing-library/jest-dom', '@infotition/tsi/lib'],
 
           sourceMap: maps,
 
