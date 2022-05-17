@@ -62,7 +62,9 @@ export const publishAction = async ({ dry, clean }: PublishOpts) => {
 
   spinner.succeed(chalk.bold.green('Bundling successful.'));
 
-  const authToken = process.env.NODE_AUTH_TOKEN;
+  const authToken = process.env.NPM_TOKEN;
+
+  console.log(authToken);
 
   const withAuth = authToken ? `npx cross-env NODE_AUTH_TOKEN=${authToken} ` : '';
   const withDry = dry ? '--dry-run' : '';

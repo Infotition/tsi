@@ -1,6 +1,6 @@
 {
   "name": "@infotition/tsi",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Infotition's zero-config CLI for TypeScript node package development.",
   "type": "module",
   "types": "index.d.ts",
