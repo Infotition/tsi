@@ -62,20 +62,17 @@ export const publishAction = async ({ dry, clean }: PublishOpts) => {
 
   spinner.succeed(chalk.bold.green('Bundling successful.'));
 
-  const authToken = process.env.NODE_AUTH_TOKEN;
-
-  console.log(process.env.NODE_AUTH_TOKEN);
-  console.log(process.env.NPM_TOKEN);
-
-  const withAuth = authToken ? `npx cross-env NODE_AUTH_TOKEN=${authToken} ` : '';
-  const withDry = dry ? '--dry-run' : '';
-  const publishCommand = `cd package&&${withAuth}npm publish ${withDry} --access public`;
+  const withDry = dry ? ' --dry-run' : '';
+  const publishCommand = `cd package&&npm publish${withDry} --access public`;
 
   if (dry) {
     execSync(publishCommand);
   } else {
-    const localVersion = JSON.parse(readFileSync(resolve(cwd, 'package.json')).toString()).version;
+    const localVersion = JSON.parse(readFileSync(resolve(cwd, 'package.json')).toString())
+      .version as string;
     const remoteVersion = execSync('npm view . version', { encoding: 'utf-8' }).trim();
+
+    console.log(localVersion, remoteVersion);
 
     if (localVersion !== remoteVersion) {
       execSync(publishCommand);
