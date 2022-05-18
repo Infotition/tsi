@@ -5,15 +5,12 @@ import jest from 'jest';
 import { createJestConfig } from '../generators/createJestConfig';
 import { appRoot } from '../utils/constants';
 
-/**
- * Runs the jest test suites.
- *
- * The jest setup file is the standard tsi one. If this files isn't
- * found in the current project, the action searches it max. 3 folders up the file tree. This is
- * needed in yarn workspaces/monorepos, because they store node modules in monorepo root and not
- * in the project root.
- */
-export const testAction = async () => {
+export type TestOpts = {
+  /** Whether a coverage report should get generated or not. */
+  coverage: boolean;
+};
+
+export const testAction = async (opts: TestOpts) => {
   for (let i = 0; i < 3; i += 1) {
     const setupPath = join(
       appRoot,
@@ -22,7 +19,11 @@ export const testAction = async () => {
     );
 
     if (existsSync(setupPath)) {
-      return jest.run(['--config', JSON.stringify(createJestConfig(setupPath))]);
+      return jest.run([
+        opts.coverage ? '--coverage' : '',
+        '--config',
+        JSON.stringify(createJestConfig(setupPath)),
+      ]);
     }
   }
 

@@ -5,5 +5,9 @@ export const storybook = (prog: Sade) => {
   prog
     .command('storybook')
     .describe('Start the storybook development server.')
+
+    .option('--build', 'Whether storybook should build a static folder.', false)
+    .example('storybook --build')
+
     .action(storybookAction);
 };
