@@ -14,7 +14,7 @@ export const cleanAction = async ({ modules }: CleanOpts) => {
 
   spinner.start(chalk.bold.cyan('Cleaning project...'));
 
-  const files = ['package', 'lib', '.turbo'];
+  const files = ['package', 'lib', '.turbo', 'coverage', 'build'];
 
   for (const file of files) {
     if (existsSync(resolve(cwd, file))) {

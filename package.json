@@ -1,6 +1,6 @@
 {
   "name": "@infotition/tsi",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Infotition's zero-config CLI for TypeScript node package development.",
   "type": "module",
   "types": "index.d.ts",
@@ -42,6 +42,7 @@
     "clean-publish": "^4.0.0",
     "cssnano": "^5.1.7",
     "fs-extra": "^10.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "jest-transform-stub": "^2.0.0",
     "ora": "^6.1.0",
