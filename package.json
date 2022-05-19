@@ -37,6 +37,7 @@
     "@storybook/theming": "^6.4.22",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.1",
+    "@testing-library/user-event": "^14.2.0",
     "autoprefixer": "^10.4.4",
     "chalk": "^5.0.1",
     "clean-publish": "^4.0.0",
