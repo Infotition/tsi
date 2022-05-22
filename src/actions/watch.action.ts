@@ -26,11 +26,17 @@ export const watchAction = async (opts: WatchOpts) => {
     ...opts,
     env: 'dev',
     types: false,
+    extractScss: false,
   });
 
   emptyDirSync(appDist);
 
   const spinner = ora().start();
+
+  if (!buildConfigs) {
+    console.log(chalk.red('No entry is defined.'));
+    return;
+  }
 
   watch(
     buildConfigs.map((config) => {

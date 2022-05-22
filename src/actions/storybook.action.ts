@@ -25,7 +25,7 @@ export const storybookAction = async (opts: StorybookOpts) => {
   const storybook = exec(
     'start-storybook -p 6006 --quiet -c ../../node_modules/@infotition/tsi/lib/config/.storybook',
   );
-
+  //storybook.stdout?.on('data', (data) => console.log(data.toString()));
   //storybook.stderr?.on('data', (data) => console.log(data.toString()));
   storybook.on('exit', () => spinner.succeed(chalk.bold.green('Storybook closed')));
 };

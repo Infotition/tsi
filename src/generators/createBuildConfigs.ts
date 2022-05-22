@@ -159,7 +159,7 @@ const createRollupConfig = (opts: BuildOpts) => {
  * @param opts  The build options to generate a config from.
  * @returns     The rollup configuration.
  */
-export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
+export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] | undefined => {
   let { entry } = opts;
 
   if (!entry) {
@@ -168,6 +168,10 @@ export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] => {
     if (existsSync(pathResolve(appRoot, 'src/index.tsx'))) {
       entry = 'src/index.tsx';
     }
+  }
+
+  if (!existsSync(pathResolve(appRoot, 'src/index.tsx'))) {
+    return;
   }
 
   // If only a single entry is provided, create its config
