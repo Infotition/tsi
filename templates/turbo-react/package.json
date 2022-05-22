@@ -1,0 +1,56 @@
+{
+  "name": "@infotition/turbo-react",
+  "version": "1.0.0",
+  "description": "Lightweight react text field based on material design 3.",
+  "author": "infotition",
+  "license": "MIT",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "sideEffects": false,
+  "repository": "https://github.com/Infotition/infopackages.git",
+  "keywords": [
+    "react-component",
+    "react",
+    "text-field",
+    "infotition"
+  ],
+  "scripts": {
+    "dev": "tsi watch --extract",
+    "test": "tsi test",
+    "lint": "tsi lint",
+    "clean": "tsi clean",
+    "build": "tsi build --types --extract",
+    "deploy": "tsi publish",
+    "docs:dev": "tsi storybook"
+  },
+  "dependencies": {
+    "@infotition/classnames": "*"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@storybook/react": "^6.4.22",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.25",
+    "@types/react": "^18.0.1",
+    "husky": "^7.0.4",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "typescript": "^4.6.3"
+  },
+  "prettier": "@infotition/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "@infotition/eslint-config"
+    ],
+    "ignorePatterns": [
+      "*.js",
+      "lib/**"
+    ],
+    "rules": {
+      "import/no-default-export": "off"
+    }
+  }
+}

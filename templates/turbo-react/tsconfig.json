@@ -1,0 +1,4 @@
+{
+  "extends": "@infotition/tsi/lib/config/tsconfig.json",
+  "include": ["src/**/*.tsx", "src/**/*.ts"]
+}
