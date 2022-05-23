@@ -1,12 +1,11 @@
 import { existsSync, readdirSync, lstatSync, copyFileSync } from 'fs';
-import { join } from 'path';
+import { join, basename } from 'path';
 import chalk from 'chalk';
 import { emptyDirSync } from 'fs-extra';
 import ora from 'ora';
 import { OutputOptions, rollup } from 'rollup';
 import { createBuildConfigs } from '../generators/createBuildConfigs';
 import { appDist, appSrc } from '../utils/constants';
-import { extractFilename } from '../utils/extractFilename';
 import { parseSeconds } from '../utils/parseSeconds';
 
 export type BuildOpts = {
@@ -38,7 +37,7 @@ const copyFiles = (src: string, dest: string, ext: string): void => {
     if (stats.isDirectory()) {
       copyFiles(file, dest, ext);
     } else if (file.endsWith(ext)) {
-      const filename = extractFilename(file);
+      const filename = basename(file);
       if (filename.startsWith('index')) continue;
       copyFileSync(file, join(dest, filename));
       console.log(chalk.green('✔ copied ' + chalk.bold(filename) + ' to dest'));
@@ -63,8 +62,8 @@ export const buildAction = async (opts: BuildOpts) => {
 
       const outputOptions = config.output as OutputOptions[];
 
-      const input = extractFilename(config.input?.toString() || '');
-      const output = extractFilename(outputOptions[0].file || '');
+      const input = basename(config.input?.toString() || '');
+      const output = basename(outputOptions[0].file || '');
 
       spinner.start(chalk.cyan(`bundles ${input} →  ${output}...`));
 
