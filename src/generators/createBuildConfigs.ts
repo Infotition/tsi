@@ -170,7 +170,7 @@ export const createBuildConfigs = (opts: BuildOpts): RollupOptions[] | undefined
     }
   }
 
-  if (!existsSync(pathResolve(appRoot, 'src/index.tsx'))) {
+  if (!existsSync(pathResolve(appRoot, entry))) {
     return;
   }
 
