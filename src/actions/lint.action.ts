@@ -7,6 +7,6 @@ export const lintAction = async () => {
   const spinner = ora();
 
   spinner.start(chalk.bold.cyan('Linting source code...'));
-  execSync('eslint src/**/*.ts');
+  execSync('eslint');
   spinner.succeed(chalk.bold.green('Linting completed'));
 };
